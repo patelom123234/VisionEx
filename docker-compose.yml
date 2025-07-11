@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  visionex:
+    build: .
+    ports:
+      - "8080:8080"  # gRPC port
+      - "8081:8081"  # HTTP port
+    environment:
+      - GRPC_PORT=8080
+      - WEB_PORT=8081
+      - VISIONEX_UI_URL=http://localhost:3000
+      - VISIONEX_STATIC_FILE_DIR=ui/dist
+      - GCP_PROJECT_ID=your-project-id
+      - DOCUMENTAI_ENDPOINT=us-documentai.googleapis.com:443
+      - DOCUMENTAI_LOCATION=us
+      - DOCUMENTAI_PROCESSOR_ID=your-processor-id-here
+      - GCP_TO_IMAGE_STORAGE=visionex-to-image
+      - GCP_TO_MARKDOWN_STORAGE=visionex-to-markdown
+      - OPENAI_KEY_SECRET_NAME=openai-api-key
+      - GEMINI_API_KEY_SECRET_NAME=gemini-api-key
+      - OPENAI_API_KEY=your-openai-api-key-here
+      - GEMINI_API_KEY=your-gemini-api-key-here
+      - LAMA_URL=https://your-lama-service.com/predict
+    volumes:
+      - ./grpc/cmd/config.local.env:/root/config.local.env
+    restart: unless-stopped
+
+  # Optional: Add a database service if needed
+  # postgres:
+  #   image: postgres:15
+  #   environment:
+  #     POSTGRES_DB: visionex
+  #     POSTGRES_USER: visionex
+  #     POSTGRES_PASSWORD: visionex_password
+  #   ports:
+  #     - "5432:5432"
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+
+# volumes:
+#   postgres_data: 

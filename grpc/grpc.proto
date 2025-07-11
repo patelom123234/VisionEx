@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package visionex.grpc;
+option go_package = "github.com/visionex-project/visionex/grpc";
+
+service VisionEx {
+  // Translates an image into a PNG format.
+  // Currently only PNG, JPEG, WEBP and non-animated GIF are supported.
+  // The image will be translated into the target language.
+  rpc TranslateToImage(TranslateToImageRequest)
+      returns (TranslateToImageResponse) {}
+
+  // Translates an image into a Markdown format.
+  // Currently only PNG, JPEG, WEBP and non-animated GIF are supported.
+  // The image will be translated into the target language.
+  rpc TranslateToMarkdown(TranslateToMarkdownRequest)
+      returns (TranslateToMarkdownResponse) {}
+
+  // Extracts text from image and translates it into the target language.
+  // The image shows which sentence were detected as square.
+  rpc TranslateTextFromImage(TranslateTextFromImageRequest)
+      returns (TranslateTextFromImageResponse) {}
+
+  rpc SignIn(SignInRequest) returns (SignInResponse) {}
+}
+
+message TranslateTextFromImageRequest {
+  // The image shows which sentence were detected as square.
+  bytes image = 1;
+  // Target language for translation. E.g., ko-KR
+  Language target_language = 2;
+}
+
+message TranslateTextFromImageResponse {
+  // The image shows which sentence were detected as square.
+  string uri_image = 1;
+  // The translated sentences.
+  repeated Sentence sentences = 2;
+}
+
+message Sentence {
+  // The original text. E.g., 안녕하세요
+  string text = 1;
+  // The translated text. E.g., Hello
+  string translated_text = 2;
+}
+
+message TranslateToMarkdownRequest {
+  // Field 1 was previously used for 'repeated bytes images'
+  // which has been deprecated and removed.
+  reserved 1;
+  // Target language for translation.
+  Language target_language = 2;
+  // Model to be used for create Markdown.
+  Model model = 3;
+  // The image to be translated into Markdown format.
+  bytes image = 4;
+}
+
+message TranslateToImageRequest {
+  // Field 1 was previously used for 'repeated bytes images'
+  // which has been deprecated and removed.
+  reserved 1;
+  // Target language for translation.
+  Language target_language = 2;
+  // The image to be translated into Markdown format.
+  bytes image = 3;
+}
+
+message TranslateToMarkdownResponse {
+  // The translated Markdown.
+  // E.g., "# Example Title\nThis is an example paragraph.".
+  string markdown = 1;
+}
+
+message TranslateToImageResponse {
+  // The translated image in URI format.
+  // Currently only PNG format will be returned.
+  // E.g., "data:image/png;base64,..."
+  string uri_image = 1;
+}
+
+enum Language {
+  // Unspecified language.
+  LANGUAGE_UNSPECIFIED = 0;
+  // American English (United States). en-US.
+  LANGUAGE_EN_US = 1;
+  // Korean (South Korea). ko-KR.
+  LANGUAGE_KO_KR = 2;
+  // Japanese (Japan). ja-JP.
+  LANGUAGE_JA_JP = 3;
+}
+
+enum Model {
+  // Unspecified model.
+  MODEL_UNSPECIFIED = 0;
+  // Model for GPT-4o.
+  MODEL_GPT4O = 1;
+  // Model for GPT-4o Mini.
+  MODEL_GPT4O_MINI = 2;
+  // Model for Gemini Flash.
+  MODEL_GEMINI_FLASH = 3;
+}
+
+message SignInRequest {
+  // Google OpenID token of the user. E.g., "abcdef123ghijk"
+  string google_open_id_token = 1;
+}
+
+message SignInResponse {
+  // A Bearer token that must be set in the "Authorization" header for every follow-up request. E.g., "Bearer abc123"
+  string token = 1;
+}
