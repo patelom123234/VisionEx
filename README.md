@@ -1,4 +1,4 @@
-# VisionEx - AI-Powered Document Translation Service
+# VisionEx - AI-Powered Image Translation Service
 
 VisionEx is a comprehensive AI-powered service that translates documents between different formats and languages using various AI models including OpenAI, Google's Document AI, and Gemini.
 
