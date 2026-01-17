@@ -10,7 +10,7 @@ services:
       - GRPC_PORT=8080
       - WEB_PORT=8081
       - VISIONEX_UI_URL=http://localhost:3000
-      - VISIONEX_STATIC_FILE_DIR=ui/dist
+      - VISIONEX_STATIC_FILE_DIR=/app/ui/dist
       - GCP_PROJECT_ID=your-project-id
       - DOCUMENTAI_ENDPOINT=us-documentai.googleapis.com:443
       - DOCUMENTAI_LOCATION=us
@@ -22,8 +22,6 @@ services:
       - OPENAI_API_KEY=your-openai-api-key-here
       - GEMINI_API_KEY=your-gemini-api-key-here
       - LAMA_URL=https://your-lama-service.com/predict
-    volumes:
-      - ./grpc/cmd/config.local.env:/root/config.local.env
     restart: unless-stopped
 
   # Optional: Add a database service if needed

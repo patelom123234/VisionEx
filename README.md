@@ -18,31 +18,16 @@ VisionEx is a comprehensive AI-powered service that translates documents between
 
 ```
 visionex/
-├── grpc/                 # gRPC service definitions and implementation
-│   ├── auth/            # Authentication (Firebase)
-│   ├── cmd/             # Main server entry point
-│   ├── impl/            # Service implementations
-│   │   ├── documentai/  # Google Document AI integration
-│   │   ├── font/        # Font rendering
-│   │   ├── genai/       # Google Gemini integration
-│   │   ├── lama/        # LLaMA model integration
-│   │   ├── openai/      # OpenAI integration
-│   │   ├── storage/     # Google Cloud Storage
-│   │   └── vision/      # Google Vision API
-│   └── grpc.proto       # Protocol buffer definitions
-├── pkg/                 # Shared packages
-│   ├── auth/           # Authentication utilities
-│   ├── env/            # Environment configuration
-│   ├── http/           # HTTP utilities
-│   ├── openai/         # OpenAI client
-│   └── utils/          # Common utilities
-└── ui/                 # React frontend
-    └── src/            # Frontend source code
+├── src/main/java/       # Java gRPC backend source
+├── src/main/proto/      # Protocol buffer definitions
+├── src/main/resources/  # Fonts + prompt examples
+├── ui/                  # React frontend
+│   └── src/             # Frontend source code
 ```
 
 ## Prerequisites
 
-- Go 1.21 or later
+- Java 17 or later
 - Node.js 18 or later
 - Google Cloud Platform account
 - OpenAI API key
@@ -115,8 +100,8 @@ LAMA_URL=http://localhost:8082
 ### 4. Install Dependencies
 
 ```bash
-# Install Go dependencies
-go mod download
+# Install backend dependencies (Gradle needs to be installed)
+gradle build -x test
 
 # Install frontend dependencies
 cd ui
@@ -128,13 +113,10 @@ cd ..
 
 ```bash
 # Build the backend
-make build
+gradle build
 
 # Run the server
-make run
-
-# Or run with specific environment
-make run-local
+gradle run
 ```
 
 ## API Endpoints
@@ -151,14 +133,14 @@ The service provides the following gRPC endpoints:
 ### Running Tests
 
 ```bash
-go test ./...
+gradle test
 ```
 
 ### Building for Production
 
 ```bash
 # Build backend
-make build
+gradle build
 
 # Build frontend
 cd ui
@@ -178,8 +160,6 @@ docker run -p 8080:8080 -p 8081:8081 visionex
 
 ## Configuration Files
 
-- `grpc/cmd/config.local.env`: Local development configuration
-- `grpc/cmd/config.dev.env`: Development environment configuration
 - `env.example`: Example environment variables
 
 ## Security Notes
@@ -198,7 +178,7 @@ The project includes a LaMa (Large Mask) service for image inpainting (removing 
 1. **Deploy LaMa on Google Cloud Run**:
    - Use the LaMa model from [https://github.com/advimman/lama](https://github.com/advimman/lama)
    - Deploy as a containerized service
-   - Update the `lama.New()` function in `grpc/impl/lama/lama.go`
+   - Replace the mock implementation in `visionEx-java/src/main/java/com/visionex/clients/MockLamaClient.java`
 
 2. **Use OpenAI's Image Editing API**:
    - Replace with OpenAI's inpainting capabilities
